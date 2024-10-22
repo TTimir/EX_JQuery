@@ -12,12 +12,12 @@
     <div class="row">
         <div class="col-md-4">
             @* <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">First Name</label>
-                <input type="text" class="form-control" id="firstname" placeholder="jhon">
+            <label for="exampleFormControlInput1" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstname" placeholder="jhon">
             </div>
             <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">Last Name</label>
-                <input type="text" class="form-control" id="lastname" placeholder="doe">
+            <label for="exampleFormControlTextarea1" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastname" placeholder="doe">
             </div>
             <br />
             <button class="btn btn-info" onclick="Display()">Submit</button>
@@ -33,7 +33,9 @@
                 <input type="text" class="form-control" id="num2" placeholder="00">
             </div>
             <br />
-            <button class="btn btn-info" onclick="Display()">Submit</button>
+            <button class="btn btn-info" onclick="Display()">Add</button>
+            <button class="btn btn-info" onclick="DisplayTwo()">Subtract</button>
+            <button class="btn btn-info" onclick="Cal()">Calculate</button>
             <br />
             <h3 id="result"></h3>
         </div>
@@ -48,7 +50,7 @@
     //     alert("Welcome To Jquery");
     // });
 
-    // function Display() 
+    // function Display()
     // {
     //     var fname = $("#firstname").val();
     //     var lname = $("#lastname").val();
@@ -56,15 +58,74 @@
     //     var getData = fname + " " + lname;
 
     //     $("#result").text(getData);
-    // } 
+    // }
+
+    // function Display() {
+    //     var num1 = parseInt($("#num1").val());
+    //     var num2 = parseInt($("#num2").val());
+
+    //     var getSum = num1 + num2;
+
+    //     $("#result").text(getSum);
+    // }
 
     function Display() {
-        var num1 = parseInt($("#num1").val());
-        var num2 = parseInt($("#num2").val());
+        var n1 = parseInt($("#num1").val());
+        var n2 = parseInt($("#num2").val());
 
-        var getSum = num1 + num2;
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Add")',
+            data: { num1: n1, num2: n2 },
+            dataType: 'text',
+            success: function(response,status,xhr){
+                $("#result").text(response);
+            },
+            error: function(req,status,error){
+                $("#result").text(error);
+            }
+        });
+    }
 
-        $("#result").text(getSum);
+    function DisplayTwo() {
+        var n1 = parseInt($("#num1").val());
+        var n2 = parseInt($("#num2").val());
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Subtract")',
+            data: { num1: n1, num2: n2 },
+            dataType: 'text',
+            success: function (response, status, xhr) {
+                $("#result").text(response);
+            },
+            error: function (req, status, error) {
+                $("#result").text(error);
+            }
+        });
+    }
+
+    function Cal() {
+        var n1 = parseInt($("#num1").val());
+        var n2 = parseInt($("#num2").val());
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Calulate")',
+            data: { num1: n1, num2: n2 },
+            dataType: 'json',
+            success: function (response, status, xhr) {
+                var data = "Addition Result is: " + response.add +
+                    "<br>Substration Result is: " + response.substract +
+                    "<br>Multiplication Result is: " + response.multiply +
+                    "<br>Division Result is: " + response.division;
+
+                $("#result").html(data);
+            },
+            error: function (req, status, error) {
+                $("#result").text(error);
+            }
+        });
     }
 
 </script>
